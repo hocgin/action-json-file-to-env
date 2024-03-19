@@ -1,15 +1,20 @@
-import * as core from '@actions/core';
-import * as github from '@actions/github';
-import {
-    PullRequestEvent, PushEvent,
-    ReleaseEvent,
-} from '@octokit/webhooks-definitions/schema'
+import {debug, getInput, info, setFailed, warning} from "@actions/core"
 import {Inputs, Outputs} from "./main";
 
-export function run(input: Inputs): Outputs {
-    // const octokit = getOctokit(process.env.GITHUB_TOKEN!, {});
-    let context = github.context;
+// @ts-ignore
+const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
-    // TODO 写你的代码..
-    return {};
+export function run(input: Inputs): Outputs {
+    let env = {};
+    try {
+        info(`${tag("🟡 QUEUE")} read file content`);
+        env = JSON.parse(getInput(input?.file ?? "env", {required: true}));
+    } catch (error) {
+        if (error instanceof Error) {
+            setFailed(`${tag("🔴 ERROR")} ${error.message}`)
+        }
+    }
+    return {
+        ...env
+    };
 }

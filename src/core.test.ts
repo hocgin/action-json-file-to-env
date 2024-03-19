@@ -16,6 +16,7 @@ describe('action env [core.js] test', () => {
         //     // .mockReturnValueOnce('asset_path')
         //     // .mockReturnValueOnce('asset_name')
         //     .mockReturnValueOnce('asset_content_type');
-        run({} as any);
+        let outputs = run({} as any);
+        console.log('outputs', outputs);
     });
 });

@@ -1,8 +1,9 @@
 import {run} from "./core";
-import * as core from "@actions/core";
+import core from "@actions/core";
 
 export interface Inputs {
     debug?: boolean;
+    file?: string;
 }
 
 export interface Outputs {
