@@ -3,7 +3,7 @@ import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
 
 
-const octokit = github.getOctokit(getInput('token') ?? process.env.GITHUB_TOKEN);
+const octokit = github.getOctokit(getInput('token', {required: false}) ?? process.env.GITHUB_TOKEN);
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
 async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<any | undefined> {
