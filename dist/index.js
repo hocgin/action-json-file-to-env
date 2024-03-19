@@ -43,11 +43,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core_1 = __nccwpck_require__(9483);
 const github = __importStar(__nccwpck_require__(7586));
+const octokit = github.getOctokit((_a = (0, core_1.getInput)('token', { required: false })) !== null && _a !== void 0 ? _a : process.env.GITHUB_TOKEN);
 const tag = (prefix) => `${prefix.padEnd(9)} |`;
 function getFileContents(branch, owner, repo, filepath, token) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const octokit = github.getOctokit(token);
             const body = { owner, repo, ref: branch, path: filepath };
             (0, core_1.info)(`👉 ${JSON.stringify(body, null, 2)}`);
             const { data } = yield octokit.rest.repos.getContent(body);
@@ -65,7 +65,6 @@ function nodeBase64ToUtf8(data) {
 }
 function getBranch(branch, repo, token) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokit = github.getOctokit(token);
         if (branch) {
             return Promise.resolve(branch);
         }
@@ -143,7 +142,12 @@ exports.debugPrintf = void 0;
 const core_1 = __nccwpck_require__(9367);
 const core = __importStar(__nccwpck_require__(9483));
 let getInput = () => ({
-    debug: core.getInput('debug') === 'true'
+    debug: core.getInput('debug') === 'true',
+    file: core.getInput('file', { required: false }),
+    owner: core.getInput('owner', { required: false }),
+    repo: core.getInput('repo', { required: false }),
+    branch: core.getInput('branch', { required: false }),
+    token: core.getInput('token', { required: false }),
 });
 let handleOutput = (output = {}) => {
     Object.keys(output).forEach((key) => core.setOutput(key, output[key]));
@@ -722,8 +726,8 @@ class OidcClient {
             const res = yield httpclient
                 .getJson(id_token_url)
                 .catch(error => {
-                throw new Error(`Failed to get ID Token. \n
-        Error Code : ${error.statusCode}\n
+                throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
         Error Message: ${error.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
@@ -34380,7 +34384,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -34394,7 +34398,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
@@ -34403,23 +34407,23 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
-/******/
+/******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/
+/******/ 	
 /************************************************************************/
-/******/
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	var __webpack_exports__ = __nccwpck_require__(9970);
 /******/ 	module.exports = __webpack_exports__;
-/******/
+/******/ 	
 /******/ })()
 ;
