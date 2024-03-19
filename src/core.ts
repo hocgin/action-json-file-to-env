@@ -9,6 +9,9 @@ export function run(input: Inputs): Outputs {
     try {
         info(`${tag("🟡 QUEUE")} read file content`);
         env = JSON.parse(getInput(input?.file ?? "env", {required: true}));
+        if (input.debug) {
+            console.log('env=', env);
+        }
     } catch (error) {
         if (error instanceof Error) {
             setFailed(`${tag("🔴 ERROR")} ${error.message}`)
