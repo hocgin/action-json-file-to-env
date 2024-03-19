@@ -5,6 +5,18 @@ inputs:
   debug:
     required: false
     description: 'debug mode'
+  file:
+    required: false
+    description: '.json file path, eg: .github/workflows/env.json'
+  owner:
+    required: false
+    description: 'resp owner'
+  repo:
+    required: false
+    description: 'resp'
+  branch:
+    required: false
+    description: 'branch'
 #outputs:
 runs:
   using: node16

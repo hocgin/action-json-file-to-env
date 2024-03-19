@@ -21,7 +21,6 @@ let getInput = (): Inputs => ({
     owner: core.getInput('owner', {required: false}),
     repo: core.getInput('repo', {required: false}),
     branch: core.getInput('branch', {required: false}),
-    token: core.getInput('token', {required: false}),
 })
 
 let handleOutput = (output: Outputs = {}) => {
