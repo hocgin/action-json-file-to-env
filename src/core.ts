@@ -3,12 +3,12 @@ import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
 
 
-type GetContentResponseType = any;
+// declare GetContentResponseType = any;
 
 // @ts-ignore
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
-async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<GetContentResponseType | undefined> {
+async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<any | undefined> {
     try {
         const octokit = github.getOctokit(token);
         const body = {owner, repo, ref: branch, path: filepath}
