@@ -3,10 +3,10 @@ import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
 
 
-const octokit = github.getOctokit(getInput('token', {required: false}) ?? process.env.GITHUB_TOKEN);
+const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
-async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<any | undefined> {
+async function getFileContents(branch: string, owner: string, repo: string, filepath: string): Promise<any | undefined> {
     try {
         const body = {owner, repo, ref: branch, path: filepath}
         info(`👉 ${JSON.stringify(body, null, 2)}`);
@@ -23,7 +23,7 @@ function nodeBase64ToUtf8(data: string) {
     return Buffer.from(data, "base64").toString("utf-8");
 }
 
-async function getBranch(branch: string, repo: string, token: string): Promise<string> {
+async function getBranch(branch: string, repo: string): Promise<string> {
     if (branch) {
         return Promise.resolve(branch);
     }
@@ -32,19 +32,25 @@ async function getBranch(branch: string, repo: string, token: string): Promise<s
 }
 
 export async function run(input: Inputs): Promise<Outputs> {
-    // @ts-ignore
     const crepo = github.context.repo;
     let env = {};
-    let file = input?.file ?? "env.json";
-    let owner: string = input?.owner ?? crepo.owner;
-    let repo = input?.repo ?? crepo.repo;
-    let token = input?.token ?? process.env.GITHUB_TOKEN;
+    let file = input?.file?.trim();
+    file = file?.length ? file : "env.json";
 
-    const branch = await getBranch((input.branch ?? github.context.ref), repo, token);
+    let owner: string = input?.owner?.trim() ?? crepo.owner;
+    owner = owner?.length ? owner : crepo.owner;
+
+    let repo = input?.repo?.trim() ?? crepo.repo;
+    repo = repo?.length ? repo : crepo.repo;
+
+    let _branch = input.branch?.trim() ?? github.context.ref;
+    _branch = _branch?.length ? _branch : github.context.ref;
+
+    const branch = await getBranch(_branch, repo);
 
     info(`${tag("🟡 QUEUE")} read file content`);
 
-    let currentFile = await getFileContents(branch, owner, repo, file, token);
+    let currentFile = await getFileContents(branch, owner, repo, file);
     if (currentFile && 'content' in currentFile) {
         const fileContent = nodeBase64ToUtf8(currentFile.content || '');
         env = JSON.parse(fileContent);
