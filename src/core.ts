@@ -1,6 +1,5 @@
 import {debug, getInput, info, setFailed, warning} from "@actions/core";
 import {context, getOctokit} from '@actions/github';
-import {GetResponseTypeFromEndpointMethod} from '@octokit/types';
 import {Inputs, Outputs} from "./main";
 
 
@@ -10,7 +9,7 @@ const crepo = github.context;
 // @ts-ignore
 export const octokit = getOctokit(process.env.GITHUB_TOKEN!);
 
-type GetContentResponseType = GetResponseTypeFromEndpointMethod<typeof octokit.rest.repos.getContent>['data'];
+type GetContentResponseType = any;
 
 // @ts-ignore
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
