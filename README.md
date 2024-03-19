@@ -19,5 +19,5 @@ jobs:
           - name: Use
             run: echo "$REMOTE_HOST"
             env:
-                REMOTE_HOST: ${{ steps.prop.REMOTE_HOST }}
+              REMOTE_HOST: ${{ steps.prop.outputs.REMOTE_HOST }}
 ```
