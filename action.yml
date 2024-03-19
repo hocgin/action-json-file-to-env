@@ -1,6 +1,6 @@
-name: 'action-starter'
+name: 'action-json-file-to-env'
 author: 'hocgin'
-description: '项目描述信息'
+description: '.json file to env variable'
 inputs:
   debug:
     required: false
