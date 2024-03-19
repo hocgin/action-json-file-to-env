@@ -35,7 +35,7 @@ export async function run(input: Inputs): Promise<Outputs> {
     // @ts-ignore
     const crepo = github.context.repo;
     let env = {};
-    let file = input?.file ?? "env";
+    let file = input?.file ?? "env.json";
     let owner: string = input?.owner ?? crepo.owner;
     let repo = input?.repo ?? crepo.repo;
     let token = input?.token ?? process.env.GITHUB_TOKEN;
