@@ -35,7 +35,7 @@ export async function run(input: Inputs): Promise<Outputs> {
     const crepo = github.context.repo;
     let env = {};
     let file = input?.file?.trim();
-    file = file?.length ? file : "env.json";
+    file = file?.length ? file : ".github/workflows/env.json";
 
     let owner: string = input?.owner?.trim() ?? crepo.owner;
     owner = owner?.length ? owner : crepo.owner;
