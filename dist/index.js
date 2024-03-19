@@ -17,11 +17,15 @@ function run(input) {
     try {
         (0, core_1.info)(`${tag("🟡 QUEUE")} read file content`);
         env = JSON.parse((0, core_1.getInput)((_a = input === null || input === void 0 ? void 0 : input.file) !== null && _a !== void 0 ? _a : "env", { required: true }));
+        if (input.debug) {
+            console.log('env=', env);
+        }
     }
     catch (error) {
         if (error instanceof Error) {
             (0, core_1.setFailed)(`${tag("🔴 ERROR")} ${error.message}`);
         }
+        return {};
     }
     return Object.assign({}, env);
 }
