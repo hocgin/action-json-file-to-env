@@ -33,6 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+      - run: npm run build
       - name: Git Identity
         run: |
           git config --global user.name 'github-actions[bot]'
