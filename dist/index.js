@@ -38,15 +38,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core_1 = __nccwpck_require__(9483);
 const github = __importStar(__nccwpck_require__(7586));
+const octokit = github.getOctokit((_a = (0, core_1.getInput)('token')) !== null && _a !== void 0 ? _a : process.env.GITHUB_TOKEN);
 const tag = (prefix) => `${prefix.padEnd(9)} |`;
 function getFileContents(branch, owner, repo, filepath, token) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const octokit = github.getOctokit(token);
             const body = { owner, repo, ref: branch, path: filepath };
             (0, core_1.info)(`👉 ${JSON.stringify(body, null, 2)}`);
             const { data } = yield octokit.rest.repos.getContent(body);
@@ -64,7 +65,6 @@ function nodeBase64ToUtf8(data) {
 }
 function getBranch(branch, repo, token) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokit = github.getOctokit(token);
         if (branch) {
             return Promise.resolve(branch);
         }
