@@ -1,13 +1,13 @@
-import {info, warning} from "@actions/core";
+import {info, warning, getInput} from "@actions/core";
 import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
 
 
+const octokit = github.getOctokit(getInput('token') ?? process.env.GITHUB_TOKEN);
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
 async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<any | undefined> {
     try {
-        const octokit = github.getOctokit(token);
         const body = {owner, repo, ref: branch, path: filepath}
         info(`👉 ${JSON.stringify(body, null, 2)}`);
         const {data} = await octokit.rest.repos.getContent(body);
@@ -24,7 +24,6 @@ function nodeBase64ToUtf8(data: string) {
 }
 
 async function getBranch(branch: string, repo: string, token: string): Promise<string> {
-    const octokit = github.getOctokit(token);
     if (branch) {
         return Promise.resolve(branch);
     }
