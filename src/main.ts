@@ -4,6 +4,9 @@ import core from "@actions/core";
 export interface Inputs {
     debug?: boolean;
     file?: string;
+    owner?: string;
+    repo?: string;
+    branch?: string;
 }
 
 export interface Outputs {
@@ -26,9 +29,10 @@ export function debugPrintf(...args: any) {
     }
 }
 
-try {
-    handleOutput(run(getInput()))
-} catch (error: any) {
-    core.setFailed(error?.message);
-}
-
+(async () => {
+    try {
+        handleOutput((await run(getInput())))
+    } catch (error: any) {
+        core.setFailed(error?.message);
+    }
+})();
