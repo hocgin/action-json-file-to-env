@@ -3,9 +3,6 @@ import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
 
 
-// declare GetContentResponseType = any;
-
-// @ts-ignore
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
 async function getFileContents(branch: string, owner: string, repo: string, filepath: string, token: string): Promise<any | undefined> {
@@ -42,7 +39,6 @@ export async function run(input: Inputs): Promise<Outputs> {
     let file = input?.file ?? "env";
     let owner: string = input?.owner ?? crepo.owner;
     let repo = input?.repo ?? crepo.repo;
-    // @ts-ignore
     let token = input?.token ?? process.env.GITHUB_TOKEN;
 
     const branch = await getBranch((input.branch ?? github.context.ref), repo, token);
