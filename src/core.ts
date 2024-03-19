@@ -16,6 +16,7 @@ export function run(input: Inputs): Outputs {
         if (error instanceof Error) {
             setFailed(`${tag("🔴 ERROR")} ${error.message}`)
         }
+        return;
     }
     return {
         ...env
