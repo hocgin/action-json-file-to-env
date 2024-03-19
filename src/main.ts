@@ -7,6 +7,7 @@ export interface Inputs {
     owner?: string;
     repo?: string;
     branch?: string;
+    token?: string;
 }
 
 export interface Outputs {
