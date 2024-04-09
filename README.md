@@ -1,4 +1,5 @@
 # action-json-file-to-env
+将指定 .json 文件加载为环境参数，支持 url 地址
 
 
 ## 如何使用
