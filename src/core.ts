@@ -54,6 +54,7 @@ export async function run(input: Inputs): Promise<Outputs> {
                     cwd = ${process.cwd()},
                     __dirname = ${__dirname}
                     file = ${file}
+                ./file = ${path.relative('.', file)}
                     `)
             info(`file files = ${fs.readdirSync(file)}`);
             info(`baseDir files = ${fs.readdirSync(baseDir)}`);
