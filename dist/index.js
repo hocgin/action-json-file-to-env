@@ -94,15 +94,23 @@ function run(input) {
             let baseDir = __dirname;
             const absPath = file;
             if (!fs_1.default.existsSync(absPath)) {
+                let cwd = process.cwd();
                 (0, core_1.warning)(`not found file.
-                    cwd = ${process.cwd()},
+                    cwd = ${cwd},
                     __dirname = ${__dirname}
-                    file = ${file}
-                ./file = ${path_1.default.relative('.', file)}
+                    file = ${file},
+                    ./file = ${path_1.default.relative('.', file)},
                     `);
-                (0, core_1.info)(`file files = ${fs_1.default.readdirSync(file)}`);
-                (0, core_1.info)(`baseDir files = ${fs_1.default.readdirSync(baseDir)}`);
-                (0, core_1.info)(`relative files = ${fs_1.default.readdirSync(path_1.default.relative(__dirname, file))}`);
+                if (fs_1.default.existsSync(cwd)) {
+                    (0, core_1.info)(`cwd files = ${fs_1.default.readdirSync(cwd)}`);
+                }
+                if (fs_1.default.existsSync(__dirname)) {
+                    (0, core_1.info)(`__dirname files = ${fs_1.default.readdirSync(__dirname)}`);
+                }
+                let path1 = path_1.default.relative(__dirname, file);
+                if (fs_1.default.existsSync(path1)) {
+                    (0, core_1.info)(`relative files = ${fs_1.default.readdirSync(path1)}`);
+                }
             }
             else {
                 fileContent = fs_1.default.readFileSync(absPath).toString();
