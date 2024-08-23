@@ -6,13 +6,7 @@ import fs from "fs";
 import * as process from "node:process";
 
 
-const octokit = (()=>{
-    let token = process.env.GITHUB_TOKEN;
-    if (!token) {
-        return undefined;
-    }
-    return github.getOctokit(token);
-})();
+let octokit;
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
 async function getFileContents(branch: string, owner: string, repo: string, filepath: string): Promise<any | undefined> {
@@ -50,30 +44,13 @@ export async function run(input: Inputs): Promise<Outputs> {
         let baseDir = __dirname;
         const absPath = file;
         if (!fs.existsSync(absPath)) {
-
             let cwd = process.cwd();
-            warning(`not found file.
-                    cwd = ${cwd},
-                    __dirname = ${__dirname}
-                    file = ${file},
-                    ./file = ${path.relative('.', file)},
-                    `)
-            if (fs.existsSync(cwd)) {
-                info(`cwd files = ${fs.readdirSync(cwd)}`);
-            }
-
-            if (fs.existsSync(__dirname)) {
-                info(`__dirname files = ${fs.readdirSync(__dirname)}`);
-            }
-
-            let path1 = path.relative(__dirname, file);
-            if (fs.existsSync(path1)) {
-                info(`relative files = ${fs.readdirSync(path1)}`);
-            }
+            warning(`not found file. cwd = ${cwd}, __dirname = ${__dirname}, file = ${file}, ./file = ${path.relative('.', file)} `)
         } else {
             fileContent = fs.readFileSync(absPath).toString();
         }
     } else {
+        octokit = github.getOctokit(process.env.GITHUB_TOKEN);
         const crepo = github.context.repo;
 
         let owner: string = input?.owner?.trim() ?? crepo.owner;
