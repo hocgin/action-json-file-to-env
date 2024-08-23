@@ -5,7 +5,13 @@ import path from "path";
 import fs from "fs";
 
 
-const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+const octokit = (()=>{
+    let token = process.env.GITHUB_TOKEN;
+    if (!token) {
+        return undefined;
+    }
+    return github.getOctokit(token);
+})();
 const tag = (prefix: string) => `${prefix.padEnd(9)} |`
 
 async function getFileContents(branch: string, owner: string, repo: string, filepath: string): Promise<any | undefined> {
