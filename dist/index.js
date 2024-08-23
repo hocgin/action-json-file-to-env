@@ -47,7 +47,13 @@ const core_1 = __nccwpck_require__(9483);
 const github = __importStar(__nccwpck_require__(7586));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
-const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+const octokit = (() => {
+    let token = process.env.GITHUB_TOKEN;
+    if (!token) {
+        return undefined;
+    }
+    return github.getOctokit(token);
+})();
 const tag = (prefix) => `${prefix.padEnd(9)} |`;
 function getFileContents(branch, owner, repo, filepath) {
     return __awaiter(this, void 0, void 0, function* () {
