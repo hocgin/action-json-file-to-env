@@ -5,9 +5,14 @@ inputs:
   debug:
     required: false
     description: 'debug mode'
+  type:
+    required: false
+    description: 'eg: github, local'
+    default: 'github'
   file:
     required: false
     description: '.json file path, eg: .github/workflows/env.json'
+#
   owner:
     required: false
     description: 'resp owner'

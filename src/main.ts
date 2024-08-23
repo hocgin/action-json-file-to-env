@@ -4,6 +4,8 @@ import * as core from "@actions/core";
 export interface Inputs {
     debug?: boolean;
     file?: string;
+    type?: 'github' | 'local';
+    //
     owner?: string;
     repo?: string;
     branch?: string;
@@ -18,6 +20,8 @@ export interface Outputs {
 let getInput = (): Inputs => ({
     debug: core.getInput('debug') === 'true',
     file: core.getInput('file', {required: false}),
+    type: core.getInput('type', {required: false}) as any,
+    //
     owner: core.getInput('owner', {required: false}),
     repo: core.getInput('repo', {required: false}),
     branch: core.getInput('branch', {required: false}),

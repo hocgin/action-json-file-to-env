@@ -1,6 +1,8 @@
 import {info, warning, getInput} from "@actions/core";
 import * as github from '@actions/github';
 import {Inputs, Outputs} from "./main";
+import path from "path";
+import fs from "fs";
 
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
@@ -32,33 +34,44 @@ async function getBranch(branch: string, repo: string): Promise<string> {
 }
 
 export async function run(input: Inputs): Promise<Outputs> {
-    const crepo = github.context.repo;
-    let env = {};
+    let env = {} as any;
+    let fileContent;
     let file = input?.file?.trim();
     file = file?.length ? file : ".github/workflows/env.json";
 
-    let owner: string = input?.owner?.trim() ?? crepo.owner;
-    owner = owner?.length ? owner : crepo.owner;
+    if (input?.type === 'local') {
+        let baseDir = process.cwd();
+        const absPath = path.join(baseDir, path.dirname(file), path.basename(file));
+        if (!fs.existsSync(absPath)) {
+            warning(`not found file. absPath = ${absPath}`)
+        } else {
+            fileContent = fs.readFileSync(absPath).toString();
+        }
+    } else {
+        const crepo = github.context.repo;
 
-    let repo = input?.repo?.trim() ?? crepo.repo;
-    repo = repo?.length ? repo : crepo.repo;
+        let owner: string = input?.owner?.trim() ?? crepo.owner;
+        owner = owner?.length ? owner : crepo.owner;
 
-    let _branch = input.branch?.trim() ?? github.context.ref;
-    _branch = _branch?.length ? _branch : github.context.ref;
+        let repo = input?.repo?.trim() ?? crepo.repo;
+        repo = repo?.length ? repo : crepo.repo;
 
-    const branch = await getBranch(_branch, repo);
+        let _branch = input.branch?.trim() ?? github.context.ref;
+        _branch = _branch?.length ? _branch : github.context.ref;
 
-    info(`${tag("🟡 QUEUE")} read file content`);
+        const branch = await getBranch(_branch, repo);
 
-    let currentFile = await getFileContents(branch, owner, repo, file);
-    if (currentFile && 'content' in currentFile) {
-        const fileContent = nodeBase64ToUtf8(currentFile.content || '');
-        env = JSON.parse(fileContent);
-        if (input?.debug) {
-            console.log('env=', env);
+        info(`${tag("🟡 QUEUE")} read file content`);
+
+        let currentFile = await getFileContents(branch, owner, repo, file);
+        if (currentFile && 'content' in currentFile) {
+            fileContent = nodeBase64ToUtf8(currentFile.content || '');
         }
     }
-    return {
-        ...env
-    };
+    env = JSON.parse(fileContent);
+    if (input?.debug) {
+        console.log('env=', env);
+    }
+
+    return {...env};
 }
