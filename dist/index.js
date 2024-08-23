@@ -98,6 +98,7 @@ function run(input) {
                     cwd = ${process.cwd()},
                     __dirname = ${__dirname}
                     file = ${file}
+                ./file = ${path_1.default.relative('.', file)}
                     `);
                 (0, core_1.info)(`file files = ${fs_1.default.readdirSync(file)}`);
                 (0, core_1.info)(`baseDir files = ${fs_1.default.readdirSync(baseDir)}`);
