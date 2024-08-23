@@ -92,7 +92,7 @@ function run(input) {
         file = (file === null || file === void 0 ? void 0 : file.length) ? file : ".github/workflows/env.json";
         if ((input === null || input === void 0 ? void 0 : input.type) === 'local') {
             let baseDir = __dirname;
-            const absPath = path_1.default.join(baseDir, path_1.default.dirname(file), path_1.default.basename(file));
+            const absPath = file;
             if (!fs_1.default.existsSync(absPath)) {
                 (0, core_1.warning)(`not found file. baseDir = ${baseDir}, absPath = ${absPath}, __dirname = ${__dirname}`);
                 (0, core_1.info)(`file files = ${fs_1.default.readdirSync(file)}`);
