@@ -38,10 +38,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core_1 = __nccwpck_require__(9483);
 const github = __importStar(__nccwpck_require__(7586));
+const path_1 = __importDefault(__nccwpck_require__(1017));
+const fs_1 = __importDefault(__nccwpck_require__(7147));
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const tag = (prefix) => `${prefix.padEnd(9)} |`;
 function getFileContents(branch, owner, repo, filepath) {
@@ -74,25 +79,38 @@ function getBranch(branch, repo) {
 function run(input) {
     var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function* () {
-        const crepo = github.context.repo;
         let env = {};
+        let fileContent;
         let file = (_a = input === null || input === void 0 ? void 0 : input.file) === null || _a === void 0 ? void 0 : _a.trim();
         file = (file === null || file === void 0 ? void 0 : file.length) ? file : ".github/workflows/env.json";
-        let owner = (_c = (_b = input === null || input === void 0 ? void 0 : input.owner) === null || _b === void 0 ? void 0 : _b.trim()) !== null && _c !== void 0 ? _c : crepo.owner;
-        owner = (owner === null || owner === void 0 ? void 0 : owner.length) ? owner : crepo.owner;
-        let repo = (_e = (_d = input === null || input === void 0 ? void 0 : input.repo) === null || _d === void 0 ? void 0 : _d.trim()) !== null && _e !== void 0 ? _e : crepo.repo;
-        repo = (repo === null || repo === void 0 ? void 0 : repo.length) ? repo : crepo.repo;
-        let _branch = (_g = (_f = input.branch) === null || _f === void 0 ? void 0 : _f.trim()) !== null && _g !== void 0 ? _g : github.context.ref;
-        _branch = (_branch === null || _branch === void 0 ? void 0 : _branch.length) ? _branch : github.context.ref;
-        const branch = yield getBranch(_branch, repo);
-        (0, core_1.info)(`${tag("🟡 QUEUE")} read file content`);
-        let currentFile = yield getFileContents(branch, owner, repo, file);
-        if (currentFile && 'content' in currentFile) {
-            const fileContent = nodeBase64ToUtf8(currentFile.content || '');
-            env = JSON.parse(fileContent);
-            if (input === null || input === void 0 ? void 0 : input.debug) {
-                console.log('env=', env);
+        if ((input === null || input === void 0 ? void 0 : input.type) === 'local') {
+            let baseDir = process.cwd();
+            const absPath = path_1.default.join(baseDir, path_1.default.dirname(file), path_1.default.basename(file));
+            if (!fs_1.default.existsSync(absPath)) {
+                (0, core_1.warning)(`not found file. absPath = ${absPath}`);
             }
+            else {
+                fileContent = fs_1.default.readFileSync(absPath).toString();
+            }
+        }
+        else {
+            const crepo = github.context.repo;
+            let owner = (_c = (_b = input === null || input === void 0 ? void 0 : input.owner) === null || _b === void 0 ? void 0 : _b.trim()) !== null && _c !== void 0 ? _c : crepo.owner;
+            owner = (owner === null || owner === void 0 ? void 0 : owner.length) ? owner : crepo.owner;
+            let repo = (_e = (_d = input === null || input === void 0 ? void 0 : input.repo) === null || _d === void 0 ? void 0 : _d.trim()) !== null && _e !== void 0 ? _e : crepo.repo;
+            repo = (repo === null || repo === void 0 ? void 0 : repo.length) ? repo : crepo.repo;
+            let _branch = (_g = (_f = input.branch) === null || _f === void 0 ? void 0 : _f.trim()) !== null && _g !== void 0 ? _g : github.context.ref;
+            _branch = (_branch === null || _branch === void 0 ? void 0 : _branch.length) ? _branch : github.context.ref;
+            const branch = yield getBranch(_branch, repo);
+            (0, core_1.info)(`${tag("🟡 QUEUE")} read file content`);
+            let currentFile = yield getFileContents(branch, owner, repo, file);
+            if (currentFile && 'content' in currentFile) {
+                fileContent = nodeBase64ToUtf8(currentFile.content || '');
+            }
+        }
+        env = JSON.parse(fileContent);
+        if (input === null || input === void 0 ? void 0 : input.debug) {
+            console.log('env=', env);
         }
         return Object.assign({}, env);
     });
@@ -146,6 +164,8 @@ const core = __importStar(__nccwpck_require__(9483));
 let getInput = () => ({
     debug: core.getInput('debug') === 'true',
     file: core.getInput('file', { required: false }),
+    type: core.getInput('type', { required: false }),
+    //
     owner: core.getInput('owner', { required: false }),
     repo: core.getInput('repo', { required: false }),
     branch: core.getInput('branch', { required: false }),
