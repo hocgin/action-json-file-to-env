@@ -48,13 +48,7 @@ const github = __importStar(__nccwpck_require__(7586));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const process = __importStar(__nccwpck_require__(7742));
-const octokit = (() => {
-    let token = process.env.GITHUB_TOKEN;
-    if (!token) {
-        return undefined;
-    }
-    return github.getOctokit(token);
-})();
+let octokit;
 const tag = (prefix) => `${prefix.padEnd(9)} |`;
 function getFileContents(branch, owner, repo, filepath) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -95,28 +89,14 @@ function run(input) {
             const absPath = file;
             if (!fs_1.default.existsSync(absPath)) {
                 let cwd = process.cwd();
-                (0, core_1.warning)(`not found file.
-                    cwd = ${cwd},
-                    __dirname = ${__dirname}
-                    file = ${file},
-                    ./file = ${path_1.default.relative('.', file)},
-                    `);
-                if (fs_1.default.existsSync(cwd)) {
-                    (0, core_1.info)(`cwd files = ${fs_1.default.readdirSync(cwd)}`);
-                }
-                if (fs_1.default.existsSync(__dirname)) {
-                    (0, core_1.info)(`__dirname files = ${fs_1.default.readdirSync(__dirname)}`);
-                }
-                let path1 = path_1.default.relative(__dirname, file);
-                if (fs_1.default.existsSync(path1)) {
-                    (0, core_1.info)(`relative files = ${fs_1.default.readdirSync(path1)}`);
-                }
+                (0, core_1.warning)(`not found file. cwd = ${cwd}, __dirname = ${__dirname}, file = ${file}, ./file = ${path_1.default.relative('.', file)} `);
             }
             else {
                 fileContent = fs_1.default.readFileSync(absPath).toString();
             }
         }
         else {
+            octokit = github.getOctokit(process.env.GITHUB_TOKEN);
             const crepo = github.context.repo;
             let owner = (_c = (_b = input === null || input === void 0 ? void 0 : input.owner) === null || _b === void 0 ? void 0 : _b.trim()) !== null && _c !== void 0 ? _c : crepo.owner;
             owner = (owner === null || owner === void 0 ? void 0 : owner.length) ? owner : crepo.owner;
