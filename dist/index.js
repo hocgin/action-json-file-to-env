@@ -94,7 +94,11 @@ function run(input) {
             let baseDir = __dirname;
             const absPath = file;
             if (!fs_1.default.existsSync(absPath)) {
-                (0, core_1.warning)(`not found file. baseDir = ${baseDir}, absPath = ${absPath}, __dirname = ${__dirname}`);
+                (0, core_1.warning)(`not found file.
+                    cwd = ${process.cwd()},
+                    __dirname = ${__dirname}
+                    file = ${file}
+                    `);
                 (0, core_1.info)(`file files = ${fs_1.default.readdirSync(file)}`);
                 (0, core_1.info)(`baseDir files = ${fs_1.default.readdirSync(baseDir)}`);
                 (0, core_1.info)(`relative files = ${fs_1.default.readdirSync(path_1.default.relative(__dirname, file))}`);
