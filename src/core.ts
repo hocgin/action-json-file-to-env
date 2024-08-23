@@ -50,7 +50,11 @@ export async function run(input: Inputs): Promise<Outputs> {
         let baseDir = __dirname;
         const absPath = file;
         if (!fs.existsSync(absPath)) {
-            warning(`not found file. baseDir = ${baseDir}, absPath = ${absPath}, __dirname = ${__dirname}`)
+            warning(`not found file.
+                    cwd = ${process.cwd()},
+                    __dirname = ${__dirname}
+                    file = ${file}
+                    `)
             info(`file files = ${fs.readdirSync(file)}`);
             info(`baseDir files = ${fs.readdirSync(baseDir)}`);
             info(`relative files = ${fs.readdirSync(path.relative(__dirname, file))}`);
