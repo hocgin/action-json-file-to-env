@@ -22,6 +22,7 @@ inputs:
   branch:
     required: false
     description: 'branch'
+    default: 'main'
 #outputs:
 runs:
   using: node16
