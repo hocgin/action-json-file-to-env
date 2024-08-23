@@ -48,8 +48,7 @@ export async function run(input: Inputs): Promise<Outputs> {
 
     if (input?.type === 'local') {
         let baseDir = __dirname;
-
-        const absPath = path.join(baseDir, path.dirname(file), path.basename(file));
+        const absPath = file;
         if (!fs.existsSync(absPath)) {
             warning(`not found file. baseDir = ${baseDir}, absPath = ${absPath}, __dirname = ${__dirname}`)
             info(`file files = ${fs.readdirSync(file)}`);
